@@ -5,12 +5,28 @@ export enum TaskStatus {
   DONE = 'DONE',
 }
 
+export enum TimeType {
+  NANOSECONDS = 'NANOSECONDS',
+  MICROSECONDS = 'MICROSECONDS',
+  MILLISECONDS = 'MILLISECONDS',
+  SECONDS = 'SECONDS',
+  MINUTES = 'MINUTES',
+  HOURS = 'HOURS',
+  DAYS = 'DAYS',
+}
+
+export interface PendingNotification {
+  amount: number
+  timeType: TimeType
+}
+
 export interface Task {
   id: number
   data: string
-  deadline: string
-  status: TaskStatus
+  deadline?: string
   description?: string
+  status: TaskStatus
+  pendingNotifications: PendingNotification[]
 }
 
 export type GetTasksResponse = Task[]
@@ -25,15 +41,16 @@ export interface GetTasksByFilterRequest {
     dateFrom: string
     dateTo: string
   }
-  status?: TaskStatus,
-  page?: number,
+  status?: TaskStatus
+  page?: number
   projectIds: number[]
 }
 
 export interface CreateTaskResponse extends Omit<Task, 'status' | 'id'> {}
 export interface CreateTaskRequest
-  extends Pick<Task, 'data' | 'deadline' | 'description'> {
+  extends Omit<Task, 'id' | 'pendingNotifications' | 'status'> {
   projectId: number
+  pendingNotifications?: PendingNotification[]
 }
 
 export interface UpdateTaskResponse {
@@ -46,6 +63,7 @@ export interface UpdateTaskRequest
   data: string
   status: TaskStatus
   updatedProjectId?: number
+  pendingNotifications?: PendingNotification[]
 }
 export interface DeleteTaskResponse {
   id: number

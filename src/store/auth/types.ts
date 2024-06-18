@@ -5,6 +5,7 @@ export interface SignUpRequest {
   telegramId: string
   password: string
   passwordConfirm: string
+  deviceToken: string
   firstName?: string
   lastName?: string
 }
@@ -30,8 +31,6 @@ export interface VerifyAccountRequest {
   telegramId: string
   code: string
 }
-
-
 
 export interface GenerateVerifyCodeRequest {
   telegramId: string

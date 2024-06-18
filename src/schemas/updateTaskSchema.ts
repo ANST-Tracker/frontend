@@ -12,7 +12,7 @@ export const updateTaskSchema = z.object({
     TaskStatus.TODO,
   ]),
   updatedProjectId: z.coerce.number().optional(),
-  deadline: z.string().optional()
+  deadline: z.string().optional(),
 })
 
 export type UpdateTaskSchema = z.infer<typeof updateTaskSchema>

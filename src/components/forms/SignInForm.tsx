@@ -41,9 +41,8 @@ export const SignInForm = ({ className }: Props) => {
 
       localStorage.setItem(LOCAL_ACCESS_TOKEN_KEY, accessToken)
       localStorage.setItem(LOCAL_REFRESH_TOKEN_KEY, refreshToken)
-      navigate('/dashboard')
+      navigate('/dashboard/projects?projectId=8&projectName=Bucket')
     } catch (e) {
-		console.log(e)
       if (isServerError(e) && e.status === 403) return navigate('/')
       if (
         isServerError(e) &&

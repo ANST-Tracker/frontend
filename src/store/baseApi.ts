@@ -69,8 +69,6 @@ const customBaseQuery: BaseQueryFn<
           api,
           extraOptions
         )
-        console.log('refreshing------------------------')
-        console.log(refreshResult)
 
         if (refreshResult.error?.status === 403) {
           api.dispatch(deleteUser())

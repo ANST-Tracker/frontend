@@ -4,6 +4,7 @@ import { SignUpForm } from '../components/forms/SignUpForm'
 import { TwoFactorAuthForm } from '../components/forms/TwoFactorAuthForm'
 import { AuthLayout } from '../layouts/AuthLayout'
 import { Dashboard } from '../layouts/Dashboard'
+import { AccountSettings } from '../pages/AccountSettingsPage/AccountSettingsPage'
 import { ProjectsPage } from '../pages/ProjectsPage/ProjectsPage'
 import { ProtectedPage } from '../pages/ProtectedPage/ProtectedPage'
 
@@ -34,8 +35,12 @@ export const router = createBrowserRouter([
         element: <ProtectedPage />,
         children: [
           {
-            index: true,
+            path: 'projects',
             element: <ProjectsPage />,
+          },
+          {
+            path: 'settings',
+            element: <AccountSettings />,
           },
         ],
       },

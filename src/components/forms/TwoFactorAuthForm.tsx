@@ -4,9 +4,7 @@ import { cn } from '../../utils/cn'
 import { FormEvent, useState } from 'react'
 import toast from 'react-hot-toast'
 import telegramImg from '../../assets/img/telegram.png'
-import {
-  useGenerateVerificationCodeMutation
-} from '../../store/auth/authApi'
+import { useGenerateVerificationCodeMutation } from '../../store/auth/authApi'
 import { showError } from '../../utils/showError'
 import { Modal } from '../Modal/Modal'
 import { VerifyCodeForm } from './VerifyCodeForm'
@@ -18,11 +16,8 @@ interface Props {
 export const TwoFactorAuthForm = ({ className }: Props) => {
   const [generateVerificationCode, { isLoading }] =
     useGenerateVerificationCodeMutation()
-  // const [verifyAccount, { isLoading: isVerifyLoading }] =
-  //   useVerifyAccountMutation()
+  const [isIdentified, setIsIdentified] = useState(false)
   const [telegramId, setTelegramId] = useState('')
-
-  console.log(telegramId)
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -34,10 +29,11 @@ export const TwoFactorAuthForm = ({ className }: Props) => {
       toast.error('Please provide telegram ID')
       return
     }
-    
+
     try {
       await generateVerificationCode({ telegramId }).unwrap()
       setTelegramId(telegramId)
+      setIsIdentified(true)
 
       form.reset()
     } catch (e) {
@@ -45,16 +41,14 @@ export const TwoFactorAuthForm = ({ className }: Props) => {
     }
   }
 
+
   return (
     <>
       <form
         onSubmit={onSubmit}
         className={cn('py-14 px-10 bg-white rounded-[10px]', className)}
       >
-        <fieldset
-          disabled={isLoading}
-          className="border-none p-0"
-        >
+        <fieldset disabled={isLoading} className="border-none p-0">
           <h1 className="text-5xl font-medium text-center mb-[115px]">
             Verify Account
           </h1>
@@ -75,40 +69,42 @@ export const TwoFactorAuthForm = ({ className }: Props) => {
 
           <button
             disabled={isLoading}
-            className="rounded-[20px] w-full bg-white text-xl p-5 flex items-center justify-center gap-x-3 disabled:cursor-not-allowed border-[1px] border-black mb-[110px]"
+            className="rounded-[20px] w-full bg-white text-xl p-5 flex items-center justify-center gap-x-3 disabled:cursor-not-allowed border-[1px] border-black mb-5"
           >
             <img width={40} height={40} src={telegramImg} alt="telegram" />
-            {isLoading
-              ? 'Loading...'
-              : 'Confirm your Telegram'}
+            {isLoading ? 'Loading...' : 'Confirm your Telegram'}
           </button>
 
-          {/* <span className="flex items-center gap-x-3 justify-center">
-            Already have an account?
-            <NavLink
-              to="/sign-in"
-              className="font-medium text-xl text-[#5e9357]"
-            >
-              Sign in
-            </NavLink>
-          </span> */}
+          <Modal>
+            {isIdentified && (
+              <Modal.Open
+                renderTrigger={openModal => (
+                  <button
+                    disabled={isLoading}
+                    className="mb-20"
+                    onClick={openModal}
+                  >
+                    Open verify code menu
+                  </button>
+                )}
+              ></Modal.Open>
+            )}
+
+            <Modal.Content
+              opened={!!telegramId}
+              renderContent={closeModal => (
+                <VerifyCodeForm
+                  onActionEnd={() => {
+                    setTelegramId('')
+                    closeModal()
+                  }}
+                  telegramId={telegramId}
+                />
+              )}
+            />
+          </Modal>
         </fieldset>
       </form>
-
-      <Modal>
-        <Modal.Content
-          opened={!!telegramId}
-          renderContent={closeModal => (
-            <VerifyCodeForm
-              onActionEnd={() => {
-                setTelegramId('')
-                closeModal()
-              }}
-              telegramId={telegramId}
-            />
-          )}
-        />
-      </Modal>
     </>
   )
 }

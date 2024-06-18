@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { NavLink, useNavigate } from 'react-router-dom'
+import { v4 as uuidv4 } from 'uuid'
 import { HAS_BEEN_REGISTERED } from '../../const/localStorage'
 import { isServerError } from '../../guards/errors'
 import { SignUpSchema, signUpSchema } from '../../schemas/signUpSchema'
@@ -31,11 +32,12 @@ export const SignUpForm = ({ className }: Props) => {
 
   const onSubmit: SubmitHandler<SignUpSchema> = async (data: SignUpSchema) => {
     try {
-      const user = await signUp(data).unwrap()
+      const deviceToken = uuidv4()
+      const user = await signUp({ ...data, deviceToken }).unwrap()
       reset({ username: '', password: '', passwordConfirm: '', telegramId: '' })
       dispatch(addUser(user))
       localStorage.setItem(HAS_BEEN_REGISTERED, '1')
-      navigate('/dashboard')
+      navigate('/dashboard/projects?projectId=8&projectName=Bucket')
     } catch (e) {
       showError(e)
       if (isServerError(e) && e.status === 403) return navigate('/')
@@ -76,10 +78,7 @@ export const SignUpForm = ({ className }: Props) => {
               className="text-xl bg-none pb-[2px] w-full border-b-[1px] border-b-black focus:outline-none"
             />
             <Collapsible className="mt-1" collapsed={!!errors?.telegramId}>
-              <span className="text-red-500">
-                {' '}
-                {errors.telegramId?.message}
-              </span>
+              <span className="text-red-500">{errors.telegramId?.message}</span>
             </Collapsible>
           </div>
 

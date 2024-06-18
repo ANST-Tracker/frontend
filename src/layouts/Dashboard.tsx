@@ -31,7 +31,6 @@ export const Dashboard = ({ className }: Props) => {
 
         dispatch(addUser(data))
       } catch (error) {
-        console.log(error)
         showError(error)
       }
     })()

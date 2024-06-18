@@ -1,4 +1,9 @@
-import { DialogPanel, Dialog, Transition, TransitionChild } from '@headlessui/react'
+import {
+  Dialog,
+  DialogPanel,
+  Transition,
+  TransitionChild,
+} from '@headlessui/react'
 import {
   Dispatch,
   Fragment,
@@ -50,8 +55,6 @@ interface ContentProps {
 
 const Content = ({ renderContent, className, opened }: ContentProps) => {
   const { isOpened, setIsOpened } = useModal()
-
-  console.log(opened)
 
   useEffect(() => {
     if (opened === undefined) return

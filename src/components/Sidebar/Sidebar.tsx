@@ -2,6 +2,7 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import plusIcon from '../../assets/icons/plus.svg'
 import logoutIcon from '../../assets/icons/projects/logout.svg'
 import projectsIcon from '../../assets/icons/projects/projects.svg'
+import settingsIcon from '../../assets/icons/settings.svg'
 import logo from '../../assets/icons/sidebar-logo.svg'
 import {
   LOCAL_ACCESS_TOKEN_KEY,
@@ -37,7 +38,8 @@ export const Sidebar = ({ className }: Props) => {
         <div>
           <NavLink
             className="flex items-center gap-x-2 aria-[current=page]:bg-[#d7beea] rounded-[10px] hover:bg-[#d7beea] transition-colors duration-300 ease px-2 py-[2px] mb-2 "
-            to={'/dashboard'}
+            to={'projects'}
+            state={{ projectId: 8, projectName: 'Bucket' }}
           >
             <img width={24} height={24} src={projectsIcon} alt="projects" />
             <span className="text-xl text-[#b78dbb] capitalize">Projects</span>
@@ -67,7 +69,14 @@ export const Sidebar = ({ className }: Props) => {
             />
           </Modal>
         </div>
-        <div className="mt-auto">
+        <div className="mt-auto space-y-4 ">
+          <NavLink
+            to="settings"
+            className="flex items-center gap-x-2 bg-none text-[#888888] font-medium aria-[current=page]:text-black"
+          >
+            <img width={24} height={24} src={settingsIcon} alt="Logout" />
+            <span className="text-xl">Settings</span>
+          </NavLink>
           <button
             onClick={onLogout}
             className="flex items-center gap-x-2 bg-none text-[#888888] font-medium"

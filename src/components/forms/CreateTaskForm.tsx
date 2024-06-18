@@ -1,12 +1,16 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+
+import { useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import {
   CreateTaskSchema,
   createTaskSchema,
 } from '../../schemas/createTaskSchema'
 import { useCreateTaskMutation } from '../../store/task/taskApi'
+import { PendingNotification } from '../../store/task/types'
 import { cn } from '../../utils/cn'
 import { showError } from '../../utils/showError'
+import { AddNotification } from '../AddNotification/AddNotification'
 
 interface Props {
   className?: string
@@ -20,28 +24,44 @@ export const CreateTaskForm = ({
   onActionEnd,
 }: Props) => {
   const [createTask, { isLoading }] = useCreateTaskMutation()
-  const { register, handleSubmit } = useForm<CreateTaskSchema>({
+  const [notifications, setNotifications] = useState<PendingNotification[]>([])
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<CreateTaskSchema>({
     resolver: zodResolver(createTaskSchema),
   })
+
+  if (errors) {
+    console.log(errors)
+  }
 
   const onSubmit: SubmitHandler<CreateTaskSchema> = async ({
     deadline,
     description,
     data,
   }) => {
-    const iso = deadline.toISOString()
+    let date: string
 
-    const date =
-      iso.slice(0, iso.indexOf('T')) +
-      ' ' +
-      iso.slice(iso.indexOf('T') + 1, iso.indexOf('.'))
+    if (deadline) {
+      const iso = deadline.toISOString()
+
+      date =
+        iso.slice(0, iso.indexOf('T')) +
+        ' ' +
+        iso.slice(iso.indexOf('T') + 1, iso.indexOf('.'))
+    }
 
     try {
       await createTask({
         projectId,
         description,
         data,
-        deadline: date,
+        ...(deadline && { deadline: date! }),
+        ...(notifications.length && {
+          pendingNotifications: notifications,
+        }),
       }).unwrap()
       onActionEnd?.()
     } catch (error) {
@@ -79,13 +99,19 @@ export const CreateTaskForm = ({
             <div className="flex items-center justify-between w-full">
               <span className="capitalize text-xl">Deadline</span>
               <input
-                required
                 className="border-[1px] py-2 px-4 rounded-[10px] focus:outline-none select-none outline-none"
                 {...register('deadline')}
                 type="datetime-local"
               />
             </div>
           </div>
+
+          <AddNotification
+            className="flex flex-col gap-y-9 w-[350px] mb-14"
+            onSetNotification={notification => {
+              setNotifications(prev => [...prev, notification])
+            }}
+          />
         </div>
 
         <div className="flex items-center justify-between">

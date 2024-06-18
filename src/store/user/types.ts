@@ -4,7 +4,7 @@ export enum Roles {
   ADMIN,
 }
 
-export interface User {
+export interface 	User {
   firstName?: string
   lastName?: string
   username: string

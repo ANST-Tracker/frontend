@@ -33,19 +33,18 @@ export const VerifyCodeForm = ({
         navigate(hasBeenRegistered ? '/sign-in' : '/sign-up')
       } catch (e) {
         showError(e)
-      } 
-      finally {
-        //setOtp("")
-        //console.log(onActionEnd)
+      } finally {
         onActionEnd?.()
       }
     })()
-    console.log('test')
   }, [otp, codeLength])
 
   return (
     <form className={cn('py-14 px-5 bg-white rounded-[10px]', className)}>
       <fieldset className="p-0 m-0 border-none" disabled={isLoading}>
+        <span className="flex mb-5 items-center font-bold justify-center empty:hidden">
+          {telegramId}
+        </span>
         <OTPInput
           shouldAutoFocus
           value={otp}

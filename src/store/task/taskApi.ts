@@ -3,8 +3,8 @@ import {
   CreateTaskRequest,
   CreateTaskResponse,
   DeleteTaskResponse,
-  GetTasksByFilterResponse,
   GetTasksByFilterRequest,
+  GetTasksByFilterResponse,
   GetTasksRequest,
   GetTasksResponse,
   Task,
@@ -45,14 +45,22 @@ const taskApi = baseApi.injectEndpoints({
     }),
 
     createTask: builder.mutation<CreateTaskResponse, CreateTaskRequest>({
-      query: ({ projectId, data, deadline, description }) => ({
-        url: `/task/${projectId}`,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        method: 'POST',
-        body: { data, deadline, description },
-      }),
+      query: ({
+        projectId,
+        data,
+        deadline,
+        description,
+        pendingNotifications,
+      }) => {
+        return {
+          url: `/task/${projectId}`,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          method: 'POST',
+          body: { data, deadline, description, pendingNotifications },
+        }
+      },
       invalidatesTags: ['task'],
     }),
 
@@ -64,13 +72,21 @@ const taskApi = baseApi.injectEndpoints({
         deadline,
         description,
         status,
+        pendingNotifications,
       }) => ({
         url: `/task/${id}`,
         headers: {
           'Content-Type': 'application/json',
         },
         method: 'PUT',
-        body: { data, deadline, description, status, updatedProjectId },
+        body: {
+          data,
+          deadline,
+          description,
+          status,
+          updatedProjectId,
+          pendingNotifications,
+        },
       }),
       invalidatesTags: ['task'],
     }),
@@ -88,6 +104,7 @@ const taskApi = baseApi.injectEndpoints({
 export const {
   useGetTasksQuery,
   useGetTasksByFilterQuery,
+  useLazyGetTasksByFilterQuery,
   useGetTaskQuery,
   useCreateTaskMutation,
   useUpdateTaskMutation,

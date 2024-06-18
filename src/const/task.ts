@@ -1,4 +1,4 @@
-import { TaskStatus } from '../store/task/types'
+import { TaskStatus, TimeType } from '../store/task/types'
 
 export const TASK_STATUS: { label: string; value: TaskStatus }[] = [
   {
@@ -18,3 +18,19 @@ export const TASK_STATUS: { label: string; value: TaskStatus }[] = [
     value: TaskStatus.DONE,
   },
 ]
+
+export const TASK_NOTIFICATION_TIME_TYPE: { label: string; value: TimeType }[] =
+  [
+    {
+      label: 'Minutes',
+      value: TimeType.MINUTES,
+    },
+    {
+      label: 'Hours',
+      value: TimeType.HOURS,
+    },
+    {
+      label: 'Days',
+      value: TimeType.DAYS,
+    },
+  ]
