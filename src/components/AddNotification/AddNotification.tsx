@@ -12,14 +12,14 @@ interface Props {
 export const AddNotification = ({ className, onSetNotification }: Props) => {
   const [notification, setNotification] = useState<PendingNotification>({
     amount: 0,
-    timeType: TimeType.NANOSECONDS,
+    timeType: TimeType.MINUTES,
   })
 
   const onAddNotification = () => {
     if (notification.amount <= 0) return
 
     onSetNotification(notification)
-    setNotification({ amount: 0, timeType: TimeType.NANOSECONDS })
+    setNotification({ amount: 0, timeType: TimeType.MINUTES })
   }
 
   return (

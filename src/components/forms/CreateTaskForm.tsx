@@ -37,6 +37,8 @@ export const CreateTaskForm = ({
     console.log(errors)
   }
 
+  console.log(notifications)
+
   const onSubmit: SubmitHandler<CreateTaskSchema> = async ({
     deadline,
     description,

@@ -20,7 +20,7 @@ export const ProjectsPage = ({ className }: Props) => {
   const projectId = searchParams.get('projectId')
   const projectName = searchParams.get('projectName')
 
-  if (!projectId) return null
+  if (!projectId || !projectName) return null
 
   const onUpdateProject = async (e: React.FocusEvent<HTMLHeadElement>) => {
     if (projectName.toLowerCase() === 'bucket') {
@@ -37,7 +37,7 @@ export const ProjectsPage = ({ className }: Props) => {
     }
 
     try {
-      await updateProject({ id: projectId, name }).unwrap()
+      await updateProject({ id: Number(projectId), name }).unwrap()
     } catch (error) {
       e.target.innerText = name
       showError(error)
